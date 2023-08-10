@@ -75,7 +75,7 @@ class UsersController {
             name: user.name,
             email: user.email,
             password: user.password,
-            updated: knex.fn.now()
+            updated_at: knex.fn.now()
         }).where({ id: user.id});
 
         return response.status(200).json();
