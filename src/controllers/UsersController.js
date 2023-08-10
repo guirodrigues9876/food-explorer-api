@@ -1,5 +1,5 @@
 const { hash, compare } = require("bcryptjs");
-// const AppError = require("../utils/AppError");
+const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
 
 
@@ -8,6 +8,10 @@ class UsersController {
         const { name, email, password, isAdmin } = request.body;
 
         const hashedPassword = await hash(password, 8);
+
+        if(!name){
+            throw new AppError("Nome é obrigatório");
+        };
 
 
         await knex('users').insert({
