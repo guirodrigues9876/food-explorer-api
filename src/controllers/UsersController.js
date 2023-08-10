@@ -7,18 +7,24 @@ class UsersController {
     async create(request, response){
         const { name, email, password, isAdmin } = request.body;
 
-        const hashedPassword = await hash(password, 8);
-
-        if(!name){
-            throw new AppError("Nome é obrigatório");
+        if(!name || !email || !password){
+            throw new AppError("Preencha todos os campos");
         };
 
+        const checkUserExist =  await knex("users").where({ email }).first();
+
+        if(checkUserExist){
+            throw new AppError("Este e-mail já está em uso");
+        }
+
+
+        const hashedPassword = await hash(password, 8);
 
         await knex('users').insert({
             name,
             email,
             password: hashedPassword,
-            isAdmin
+            isAdmin: isAdmin ? 1 : 0,
         });
 
         return response.status(201).json();
