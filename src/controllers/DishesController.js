@@ -91,7 +91,6 @@ class DishesController{
     }
 
     async index(request, response){
-
         const { search } = request.query;
 
         const dishes = await knex.select("dishes.*")
@@ -105,6 +104,24 @@ class DishesController{
           return response.status(200).json(dishes);
     }
 
+    async show(request, response){
+        const { id } = request.params;
+
+        const dish = await knex("dishes").where({ id }).first();
+
+        if(!dish){
+            throw new AppError("Prato não encontrado");
+        }
+
+        const ingredients = await knex("ingredients").where({ dish_id: id}).orderBy("name");
+
+        return response.json({
+            ...dish,
+            ingredients
+        });
+    }
+
+    
 }
 
 module.exports = DishesController;
