@@ -89,6 +89,22 @@ class DishesController{
 
           return response.status(200).json();
     }
+
+    async index(request, response){
+
+        const { search } = request.query;
+
+        const dishes = await knex.select("dishes.*")
+          .from("dishes")
+          .innerJoin("ingredients", "dishes.id", "=", "ingredients.dish_id")
+          .whereLike("dishes.name", `%${search}%`)
+          .orWhereLike("ingredients.name", `%${search}%`)
+          .groupBy('dishes.name');
+    
+    
+          return response.status(200).json(dishes);
+    }
+
 }
 
 module.exports = DishesController;
