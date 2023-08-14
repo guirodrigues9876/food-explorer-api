@@ -121,7 +121,21 @@ class DishesController{
         });
     }
 
-    
+    async delete(request, response){
+        const { id } = request.params;
+        const user_id = request.user.id;
+
+        const user = await knex("users").where({ id: user_id}).first();
+        const isAdmin = user.isAdmin === 1;
+
+        if(!isAdmin) {
+            throw new AppError("Usuário não autorizado.");
+        } else {
+            await knex("dishes").where({ id }).delete();
+        }
+
+        return response.json();
+    }
 }
 
 module.exports = DishesController;
