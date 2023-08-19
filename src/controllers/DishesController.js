@@ -6,7 +6,11 @@ class DishesController{
     async create(request, response){
         const { name, description, category, price, ingredients } = request.body;
         const user_id = request.user.id;
+        let image = null;
+        let filename = null;
         
+        const diskStorage = new DiskStorage();
+
         if (!name || !category || !price || !description || !ingredients) {
             throw new AppError("Preencha todos os campos!");
         }
@@ -19,9 +23,9 @@ class DishesController{
         } else {
             
             if (request.file) {
-                const image = request.file.filename;
-                const diskStorage = new DiskStorage();
+                image = request.file.filename;
                 filename = await diskStorage.saveFile(image);
+                console.log(image)
             }
 
             const [ dish_id ] = await knex("dishes").insert({
@@ -29,16 +33,16 @@ class DishesController{
                 category,
                 price,
                 description,
-                // image: image ? filename : null,
+                image: image ? filename : null,
                 created_by: user_id,
                 updated_by: user_id,
             });
 
-            const ingredientsInsert = ingredients.map(name => {
+            const ingredientsInsert = JSON.parse(ingredients).map(name => {
                 return {
                     dish_id,
                     name
-                }
+                };
             });
 
             await knex("ingredients").insert(ingredientsInsert);
@@ -51,11 +55,15 @@ class DishesController{
         const user_id = request.user.id;
         const { name, description, category, price, ingredients } = request.body;
         const { id } = request.params;
+        let image = null;
+        let filename = null;
+
+        const diskStorage = new DiskStorage()
 
 
-        if (!name || !category || !price || !description || !ingredients) {
-            throw new AppError("Preencha todos os campos!");
-        }
+        // if (!name || !category || !price || !description || !ingredients) {
+        //     throw new AppError("Preencha todos os campos!");
+        // }
 
         const user = await knex("users").where({ id: user_id }).first();
         const isAdmin = user.isAdmin === 1;
@@ -66,19 +74,31 @@ class DishesController{
 
             const dish = await knex("dishes").where({ id }).first();
 
+            filename = dish.image
+
+            if (request.file) {
+              if (dish.image) {
+                await diskStorage.deleteFile(dish.image)
+              }
+      
+              image = request.file.filename
+              filename = await diskStorage.saveFile(image)
+            }
+
             await knex("dishes").where({ id }).update({
                 name,
                 category,
                 price,
                 description,
+                image: filename,
                 updated_at: knex.fn.now()
             });
 
-            const ingredientsInsert = ingredients.map(name => {
+            const ingredientsInsert = JSON.parse(ingredients).map(name => {
                 return {
                     dish_id: id,
                     name
-                }
+                };
             });
 
             await knex("ingredients").where({ dish_id: id }).delete();
