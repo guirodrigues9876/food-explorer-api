@@ -60,10 +60,9 @@ class DishesController{
 
         const diskStorage = new DiskStorage()
 
-
-        // if (!name || !category || !price || !description || !ingredients) {
-        //     throw new AppError("Preencha todos os campos!");
-        // }
+        if (!name || !category || !price || !description || !ingredients) {
+            throw new AppError("Preencha todos os campos!");
+        }
 
         const user = await knex("users").where({ id: user_id }).first();
         const isAdmin = user.isAdmin === 1;
@@ -94,18 +93,17 @@ class DishesController{
                 updated_at: knex.fn.now()
             });
 
-            const ingredientsInsert = JSON.parse(ingredients).map(name => {
+            const IngredientsInsert = JSON.parse(ingredients).map(name => {
                 return {
-                    dish_id: id,
-                    name
+                  dish_id: id,
+                  name,
                 };
-            });
-
-            await knex("ingredients").where({ dish_id: id }).delete();
-
-            await knex("ingredients").insert(ingredientsInsert);
-
-          }
+              });
+        
+              await knex("ingredients").where({ dish_id: id }).delete();
+        
+              await knex('ingredients').insert(IngredientsInsert);
+            }
 
           return response.status(200).json();
     }
@@ -120,7 +118,7 @@ class DishesController{
           .orWhereLike("ingredients.name", `%${search}%`)
           .groupBy('dishes.name');
     
-    
+        console.log(dishes);
           return response.status(200).json(dishes);
     }
 
@@ -140,6 +138,7 @@ class DishesController{
             ingredients
         });
     }
+
 
     async delete(request, response){
         const { id } = request.params;
