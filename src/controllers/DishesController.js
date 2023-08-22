@@ -118,7 +118,7 @@ class DishesController{
           .orWhereLike("ingredients.name", `%${search}%`)
           .groupBy('dishes.name');
     
-        console.log(dishes);
+        
           return response.status(200).json(dishes);
     }
 
