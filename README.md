@@ -11,10 +11,6 @@
   <a href="#-License">License</a>
 </p>
 
-<p align="center">
-  <img alt="timer project" src="./src/assets/cover.png" width="100%">
-</p>
-
 ## 📁 Project
 
 The application is an interactive menu for a fictitious restaurant. It has an adminstrator and user interface. It has an adminstrator and user interface.
@@ -55,7 +51,7 @@ $ npm run start
 
 ⚠Important: Create an .env file according to the .env.example file and fill in the AUTH_SECRET and SERVER_PORT fields with your respective information.
 
-## 💻art take a look at the [Front-end](https://github.com/guirodrigues9876/food-explorer-api](https://github.com/guirodrigues9876/food-explorer)
+## 💻art take a look at the [Front-end](https://github.com/guirodrigues9876/food-explorer)
 
 ## 📝 License
 <p align="center">
