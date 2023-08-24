@@ -146,7 +146,8 @@ class DishesController{
 
         const user = await knex("users").where({ id: user_id}).first();
         const isAdmin = user.isAdmin === 1;
-
+        console.log(isAdmin);
+        
         if(!isAdmin) {
             throw new AppError("Usuário não autorizado.");
         } else {
