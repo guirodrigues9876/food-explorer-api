@@ -11,6 +11,10 @@ class UsersController {
             throw new AppError("Preencha todos os campos");
         };
 
+        if(password.length < 6){
+            throw new AppError("A senha deve ter no mínimo 6 caracteres");
+        }
+
         const checkUserExist =  await knex("users").where({ email }).first();
 
         if(checkUserExist){
@@ -58,7 +62,7 @@ class UsersController {
         user.email = email ?? user.email;
 
         if(password && !old_password){
-            throw new AppError("Você precisa informar a senha antiga")
+            throw new AppError("Informe a senha antiga")
         }
 
         if(password && old_password){
