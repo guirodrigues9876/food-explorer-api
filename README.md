@@ -51,7 +51,7 @@ $ npm run start
 
 ⚠Important: Create an .env file according to the .env.example file and fill in the AUTH_SECRET and SERVER_PORT fields with your respective information.
 
-## 💻art take a look at the [Front-end](https://github.com/guirodrigues9876/food-explorer)
+## 💻take a look at the [Front-end](https://github.com/guirodrigues9876/food-explorer)
 
 ## 📝 License
 <p align="center">
